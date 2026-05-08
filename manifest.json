@@ -1,0 +1,44 @@
+{
+  "manifest_version": 3,
+  "name": "Tech Detector Pro",
+  "short_name": "TechDetector",
+  "version": "3.0.0",
+  "description": "Advanced website technology, CMS, theme, SEO, analytics, framework, hosting, color palette, fonts, and resource analyzer. Detects 60+ technologies with deep CMS/theme identification.",
+  "author": "Siddhant Srivastava",
+  "homepage_url": "https://siddhant7701.github.io/Portfolio-Sid/#home",
+  "minimum_chrome_version": "110",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "tabs"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "icons": {
+    "128": "security-scan.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Tech Detector Pro",
+    "default_icon": "security-scan.png"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["security-scan.png"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tech Detector Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- Header -->
+  <header class="hdr">
+    <div class="hdr-left">
+      <div class="logo">⬡</div>
+      <div>
+        <div class="hdr-title">Tech Detector Pro</div>
+        <div class="hdr-sub" id="siteHostname">—</div>
+      </div>
+    </div>
+    <div class="hdr-right">
+      <div class="security-badge" id="securityBadge" style="display:none"></div>
+      <button class="freeze-btn" id="freezeBtn" title="Freeze — lock this data across tab switches">
+        <span>❄️</span><span class="freeze-label">Freeze</span>
+      </button>
+      <button class="scan-btn" id="scanBtn">Scan</button>
+    </div>
+  </header>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" data-tab="overview">Overview</button>
+    <button class="tab"        data-tab="cms">CMS &amp; Theme</button>
+    <button class="tab"        data-tab="issues">Issues</button>
+    <button class="tab"        data-tab="seo">SEO</button>
+    <button class="tab"        data-tab="links">Links</button>
+    <button class="tab"        data-tab="images">Images</button>
+    <button class="tab"        data-tab="forms">Forms</button>
+    <button class="tab"        data-tab="resources">Resources</button>
+    <button class="tab"        data-tab="raw">Raw</button>
+  </div>
+
+  <!-- Content -->
+  <div id="content">
+
+    <!-- Empty state -->
+    <div id="emptyState" class="empty">
+      <div class="empty-icon">🔍</div>
+      <div class="empty-title">Ready to Analyze</div>
+      <div class="empty-sub">Click Scan to inspect the current page</div>
+      <button class="scan-btn-big" id="scanBtnBig">Scan Current Page</button>
+    </div>
+
+    <!-- Loading -->
+    <div id="loadingState" class="loading" style="display:none">
+      <div class="spinner"></div>
+      <div class="loading-text">Scanning page…</div>
+    </div>
+
+    <!-- Panel: Overview -->
+    <div id="tab-overview" class="panel" style="display:none">
+      <div class="stat-row" id="statRow"></div>
+      <div class="section-title">Detected Technologies</div>
+      <div class="toolbar" style="margin-bottom:8px">
+        <input class="filter-input" id="techFilter" placeholder="Filter technologies…">
+        <select class="filter-select" id="techCatFilter"><option value="all">All Categories</option></select>
+      </div>
+      <div id="techList"></div>
+      <div class="section-title" style="margin-top:16px">Page Info</div>
+      <div id="pageInfo"></div>
+      <div id="colorSection" style="display:none">
+        <div class="section-title" style="margin-top:16px">Color Palette</div>
+        <div id="colorPalette"></div>
+      </div>
+      <div id="socialSection" style="display:none">
+        <div class="section-title" style="margin-top:16px">Social Profiles</div>
+        <div id="socialLinks"></div>
+      </div>
+    </div>
+
+    <!-- Panel: CMS & Theme -->
+    <div id="tab-cms" class="panel" style="display:none">
+      <div id="cmsThemeContent"></div>
+    </div>
+
+    <!-- Panel: Issues -->
+    <div id="tab-issues" class="panel" style="display:none">
+      <div id="issuesContent"></div>
+    </div>
+
+    <!-- Panel: SEO -->
+    <div id="tab-seo" class="panel" style="display:none">
+      <div class="section-title">Core SEO</div>
+      <div id="seoCore"></div>
+      <div class="section-title" style="margin-top:16px">Open Graph</div>
+      <div id="seoOG"></div>
+      <div class="section-title" style="margin-top:16px">Twitter / X Cards</div>
+      <div id="seoTwitter"></div>
+      <div class="section-title" style="margin-top:16px">All Meta Tags</div>
+      <div class="toolbar">
+        <input class="filter-input" id="metaFilter" placeholder="Filter meta tags…">
+        <button class="copy-btn" id="copyMeta">Copy All</button>
+      </div>
+      <div id="metaList"></div>
+      <div class="section-title" style="margin-top:16px">Structured Data (JSON-LD)</div>
+      <div id="structuredData"></div>
+      <div class="section-title" style="margin-top:16px">Heading Structure</div>
+      <div id="headingList"></div>
+      <div class="section-title" style="margin-top:16px">Link Tags</div>
+      <div id="linkTagList"></div>
+    </div>
+
+    <!-- Panel: Links -->
+    <div id="tab-links" class="panel" style="display:none">
+      <div class="toolbar">
+        <input class="filter-input" id="linkFilter" placeholder="Filter links…">
+        <select class="filter-select" id="linkTypeFilter">
+          <option value="all">All Types</option>
+          <option value="internal">Internal</option>
+          <option value="external">External</option>
+          <option value="email">Email</option>
+          <option value="anchor">Anchor</option>
+          <option value="phone">Phone</option>
+        </select>
+        <button class="copy-btn" id="copyLinks">Copy</button>
+        <button class="copy-btn" id="exportLinksCSV">CSV</button>
+        <button class="copy-btn" id="exportLinksJSON">JSON</button>
+      </div>
+      <div class="count-tag" id="linkCount"></div>
+      <div id="linkList"></div>
+    </div>
+
+    <!-- Panel: Images -->
+    <div id="tab-images" class="panel" style="display:none">
+      <div class="toolbar">
+        <input class="filter-input" id="imgFilter" placeholder="Filter images…">
+        <label class="chk-label"><input type="checkbox" id="missingAltOnly"> Missing alt</label>
+        <label class="chk-label"><input type="checkbox" id="brokenOnly"> Broken</label>
+        <button class="copy-btn" id="copyImgs">Copy URLs</button>
+        <button class="copy-btn" id="exportImgsCSV">CSV</button>
+      </div>
+      <div class="count-tag" id="imgCount"></div>
+      <div id="imgList"></div>
+    </div>
+
+    <!-- Panel: Forms -->
+    <div id="tab-forms" class="panel" style="display:none">
+      <div class="count-tag" id="formCount"></div>
+      <div id="formList"></div>
+    </div>
+
+    <!-- Panel: Resources -->
+    <div id="tab-resources" class="panel" style="display:none">
+      <div class="section-title">Scripts (<span id="scriptCountLabel">0</span>)</div>
+      <div class="toolbar">
+        <button class="copy-btn" id="copyScripts">Copy URLs</button>
+        <button class="copy-btn" id="exportScriptsJSON">JSON</button>
+      </div>
+      <div id="scriptList"></div>
+      <div class="section-title" style="margin-top:16px">Stylesheets (<span id="styleCountLabel">0</span>)</div>
+      <div class="toolbar"><button class="copy-btn" id="copyStyles">Copy URLs</button></div>
+      <div id="styleList"></div>
+      <div class="section-title" style="margin-top:16px">Fonts (<span id="fontCountLabel">0</span>)</div>
+      <div id="fontList"></div>
+      <div class="section-title" style="margin-top:16px">PWA &amp; Manifest</div>
+      <div id="pwaInfo"></div>
+    </div>
+
+    <!-- Panel: Raw JSON -->
+    <div id="tab-raw" class="panel" style="display:none">
+      <div class="toolbar">
+        <button class="copy-btn" id="copyRaw">Copy JSON</button>
+        <button class="copy-btn" id="downloadRaw">Download</button>
+      </div>
+      <pre id="rawJSON" class="raw-json"></pre>
+    </div>
+
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <div class="frozen-badge" id="frozenBadge" style="display:none">❄️ FROZEN</div>
+</div>
+
+<div class="made-by">Made by <a href="https://siddhant7701.github.io/Portfolio-Sid/#home" target="_blank">Siddhant Srivastava</a></div>
+<script src="popup.js"></script>
+</body>
+</html>
